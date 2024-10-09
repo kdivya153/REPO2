@@ -8,7 +8,12 @@ on:
       - opened
       - synchronize
     branches: [ main ]
-  workflow_dispatch: # Triggered by external API (Repo A)
+  workflow_dispatch: 
+    inputs:
+      OPENRPC_PR_BRANCH:
+        description: 'Branch name for OpenRPC'
+        required: true
+        default: 'main'
   push:
     branches:
       - main
