@@ -8,6 +8,10 @@ on:
       - opened
       - synchronize
     branches: [ next ]
+  workflow_dispatch: # Triggered by external API (Repo A)
+  push:
+    branches:
+      - next
 
        
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
