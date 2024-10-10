@@ -1,27 +1,18 @@
 # This is a basic workflow to help you get started with Actions
-name: My Target Workflow
+name: Triggered Workflow
 
 on:
   repository_dispatch:
     types: [trigger-workflow]
-    
-jobs:
-  build:
-    runs-on: ubuntu-latest
 
+jobs:
+  triggered-job:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.client_payload.sha }}
-        
+        uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run:
-          service_name=${{ github.event.client_payload.service }}
-          echo "Service name $servicename"
+      - name: Print client payload
+        run: |
+          echo "Event Type: ${{ github.event.action }}"
+          echo "OPENRPC_PR_BRANCH: ${{ github.event.client_payload.OPENRPC_PR_BRANCH }}"
