@@ -15,4 +15,4 @@ jobs:
       - name: Print client payload
         run: |
           echo "Event Type: ${{ github.event.action }}"
-          echo "OPENRPC_PR_BRANCH: ${{ github.event.client_payload.OPENRPC_PR_BRANCH }}"
+          ec
