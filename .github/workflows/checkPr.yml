@@ -15,4 +15,4 @@ jobs:
       - name: Print client payload
         run: |
           echo "Event Type: ${{ github.event.action }}"
-          ec
+       
