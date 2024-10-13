@@ -1,19 +1,37 @@
-# This is a basic workflow to help you get started with Actions
-name: Triggered Workflow
+name: MFOS standalone sanity report - CORE,MANAGE,DISCOVERY
 
 on:
   repository_dispatch:
     types: [trigger-workflow]
-
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches: [ next ]
 jobs:
-  triggered-job:
+  RunStandaloneTests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Print client payload
+       # Set the branch if the workflow is triggered from external
+      - name: Set PR Branch based on the trigger
+        id: set-pr-branch
         run: |
-          echo "Event Type: ${{ github.event.action }}"
-          echo "Event Name: ${{ github.event_name }}"
-       
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            echo "OPENRPC_PR_BRANCH='${{ github.event.client_payload.OPENRPC_PR_BRANCH }}'" >> $GITHUB_ENV  # Set from payload
+          else
+            echo "OPENRPC_PR_BRANCH=''" >> $GITHUB_ENV  # Clear the variable for other events
+          fi
+
+      # Run tests
+      - name: Run Core Manage and Discovery tests and create assets
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          GITHUB_REF: ${{ github.ref }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          INTENT: ${{ vars.INTENT }}
+          OPENRPC_PR_BRANCH: ${{ env.OPENRPC_PR_BRANCH }} # Comes from OPENRPC repo if triggered externally
+        run: |
+          ./.github/workflows/utils.sh runTests
