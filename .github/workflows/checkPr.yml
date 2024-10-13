@@ -15,6 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Make utils.sh executable
+        run: chmod +x .github/workflows/utils.sh
+
        # Set the branch if the workflow is triggered from external
       - name: Set PR Branch based on the trigger
         id: set-pr-branch
